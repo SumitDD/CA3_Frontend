@@ -48,6 +48,16 @@ function apiFacade() {
 
     return role;
   };
+  const getUsername = () => {
+    let myToken = getToken();
+    let tokenData = myToken.split(".")[1];
+    let decoedeJsonData = window.atob(tokenData);
+    let decodedJwtData = JSON.parse(decoedeJsonData);
+    let userName = decodedJwtData.username;
+    console.log(userName);
+
+    return userName;
+  };
 
   const fetchData = () => {
     const options = makeOptions("GET", true); //True add's the token
@@ -62,6 +72,24 @@ function apiFacade() {
 
     return fetch(URL + "/api/info/parrallel/", options).then(handleHttpErrors);
   };
+
+  const fetchName = () => {
+    const options = makeOptions("GET");
+
+    return fetch(URL + "/api/info/name/", options).then(handleHttpErrors);
+  };
+
+  const addHobby = (hobby) => {
+    let body = hobby;
+    let userName = getUsername();
+    let obj = { uName: userName, pHobby: hobby.pHobby };
+    const options = makeOptions("PUT", true, obj);
+
+    return fetch(URL + "/api/info/edit/" + userName, options).then(
+      handleHttpErrors
+    );
+  };
+
   const makeOptions = (method, addToken, body) => {
     var opts = {
       method: method,
@@ -87,7 +115,9 @@ function apiFacade() {
     logout,
     fetchData,
     fetchStarwars,
-    getRole
+    getRole,
+    fetchName,
+    addHobby,
   };
 }
 
